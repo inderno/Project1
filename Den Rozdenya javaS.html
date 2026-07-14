@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Дата рождения</title>
+</head>
+<body>
+  <h1>Откройте консоль разработчика (F12), чтобы увидеть результат</h1>
+
+  <script>
+    let day   = parseInt(prompt("Введите день рождения (1-31):"), 10);
+    let month = parseInt(prompt("Введите месяц рождения (1-12):"), 10);
+    let year  = parseInt(prompt("Введите год рождения:"), 10);
+
+    function getDayOfWeek(day, month, year) {
+      const date = new Date(year, month - 1, day);
+      const days = [
+        "воскресенье", "понедельник", "вторник", "среда",
+        "четверг", "пятница", "суббота"
+      ];
+      return days[date.getDay()];
+    }
+
+    function isLeapYear(year) {
+      return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+    }
+
+    function getAge(day, month, year) {
+      const today = new Date();
+      let age = today.getFullYear() - year;
+
+      const hasHadBirthdayThisYear =
+        today.getMonth() + 1 > month ||
+        (today.getMonth() + 1 === month && today.getDate() >= day);
+
+      if (!hasHadBirthdayThisYear) {
+        age--;
+      }
+      return age;
+    }
+
+    const digitPatterns = {
+      "0": ["***", "* *", "* *", "* *", "***"],
+      "1": ["  *", "  *", "  *", "  *", "  *"],
+      "2": ["***", "  *", "***", "*  ", "***"],
+      "3": ["***", "  *", "***", "  *", "***"],
+      "4": ["* *", "* *", "***", "  *", "  *"],
+      "5": ["***", "*  ", "***", "  *", "***"],
+      "6": ["***", "*  ", "***", "* *", "***"],
+      "7": ["***", "  *", "  *", "  *", "  *"],
+      "8": ["***", "* *", "***", "* *", "***"],
+      "9": ["***", "* *", "***", "  *", "***"],
+      " ": ["   ", "   ", "   ", "   ", "   "]
+    };
+
+    function printBigDate(day, month, year) {
+      const dd = String(day).padStart(2, "0");
+      const mm = String(month).padStart(2, "0");
+      const yyyy = String(year).padStart(4, "0");
+      const fullString = `${dd} ${mm} ${yyyy}`;
+
+      let lines = ["", "", "", "", ""];
+
+      for (const char of fullString) {
+        const pattern = digitPatterns[char] || digitPatterns[" "];
+        for (let row = 0; row < 5; row++) {
+          lines[row] += pattern[row] + " ";
+        }
+      }
+
+      console.log(lines.join("\n"));
+    }
+
+    console.log("Дата рождения: " + day + "." + month + "." + year);
+    console.log("День недели: " + getDayOfWeek(day, month, year));
+    console.log(year + " год " + (isLeapYear(year) ? "високосный" : "не високосный"));
+    console.log("Текущий возраст: " + getAge(day, month, year) + " лет");
+    console.log("Дата рождения на 'табло':");
+    printBigDate(day, month, year);
+  </script>
+</body>
+</html>
